@@ -1,0 +1,2 @@
+# Allow netd to get toolbox attributes
+allow netd toolbox_exec:file {getattr open read execute ioctl execute_no_trans};
