@@ -17,7 +17,18 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
 # Dalvik/HWUI configs
-$(call inherit-product, frameworks/native/build/phone-xxhdpi-3072-hwui-memory.mk)
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.hwui.texture_cache_size=72 \
+    ro.hwui.layer_cache_size=48 \
+    ro.hwui.path_cache_size=32 \
+    ro.hwui.gradient_cache_size=1 \
+    ro.hwui.drop_shadow_cache_size=6 \
+    ro.hwui.r_buffer_cache_size=8 \
+    ro.hwui.texture_cache_flushrate=0.4 \
+    ro.hwui.text_small_cache_width=1024 \
+    ro.hwui.text_small_cache_height=1024 \
+    ro.hwui.text_large_cache_width=2048 \
+	ro.hwui.text_large_cache_height=1024
 
 # Call the proprietary setup
 $(call inherit-product, vendor/motorola/montana/montana-vendor.mk)
@@ -64,11 +75,18 @@ PRODUCT_COPY_FILES += \
 
 # Audio
 PRODUCT_PACKAGES += \
+    audiod \
     audio.primary.msm8937 \
     audio.usb.default \
     audio.a2dp.default \
     audio.r_submix.default \
-    libshim_adsp
+    libaudioresampler \
+    libqcomvisualizer \
+    libqcomvoiceprocessing \
+    libmmieffectswrapper \
+    libspeakerbundle \
+    libshim_adsp \
+    tinymix
     
 PRODUCT_COPY_FILES += \
     hardware/qcom/audio-caf/msm8996/configs/msm8937/aanc_tuning_mixer.txt:system/etc/aanc_tuning_mixer.txt \
@@ -117,7 +135,10 @@ PRODUCT_COPY_FILES += \
 
 # CM
 PRODUCT_PACKAGES += \
-    CMActions
+    MotoActions
+
+PRODUCT_PACKAGES += \
+    Launcher3
 
 # Display
 PRODUCT_PACKAGES += \
@@ -155,9 +176,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/gps/etc/xtwifi.conf:system/etc/xtwifi.conf
 
 # IPA Manager
-#PRODUCT_PACKAGES += \
-#    ipacm \
-#    IPACM_cfg.xml
+PRODUCT_PACKAGES += \
+    ipacm \
+    ipacm-diag \
+    IPACM_cfg.xml   
 
 # IMS
 PRODUCT_PACKAGES += \
@@ -179,7 +201,15 @@ PRODUCT_COPY_FILES += \
 # Media
 PRODUCT_PACKAGES += \
     libc2dcolorconvert \
-    libmm-omxcore
+    libmm-omxcore \
+    libOmxAacDec \
+    libOmxAmrwbplusDec \
+    libOmxCore \
+    libOmxEvrcDec \
+    libOmxQcelp13Dec \
+    libOmxVdec \
+    libOmxVenc \
+    libstagefrighthw
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media/etc/media_codecs.xml:system/etc/media_codecs.xml \
@@ -201,11 +231,23 @@ PRODUCT_PACKAGES += \
     
 # Nfc
 PRODUCT_PACKAGES += \
-    libnfc-nci
-    
+    libnfc-nci \
+    libnfc_nci_jni \
+    nfc_nci.pn54x.default \
+    NfcNci \
+    com.android.nfc_extras \
+    Tag
+
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/nfc/etc/libnfc-brcm.conf:system/etc/libnfc-brcm.conf \
-    $(LOCAL_PATH)/configs/nfc/etc/libnfc-nxp.conf:system/etc/libnfc-nxp.conf
+    $(LOCAL_PATH)/configs/nfc/etc/libnfc-nxp.conf:system/etc/libnfc-nxp.conf \
+    $(LOCAL_PATH)/configs/nfc/etc/libnfc-nxp_ds.conf:system/etc/libnfc-nxp_ds.conf
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
+    frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
+    frameworks/native/data/etc/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml \
+    frameworks/native/data/etc/com.nxp.mifare.xml:system/etc/permissions/com.nxp.mifare.xml
 
 # Power
 PRODUCT_PACKAGES += \
@@ -220,8 +262,15 @@ PRODUCT_PACKAGES += \
     libprotobuf-cpp-lite \
     libprotobuf-cpp-full \
     libcurl \
-    libjson
+    libjson \
+    libcutils \
+    libion
 
+
+# Releasetools script
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/check_features.sh:system/vendor/bin/check_features.sh
+    
 # RIL
 PRODUCT_PACKAGES += \
     librmnetctl \
@@ -267,8 +316,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/vhw.xml:system/etc/vhw.xml \
     $(LOCAL_PATH)/configs/rtt-conf.xml:system/etc/rtt-conf.xml \
-    $(LOCAL_PATH)/configs/voicemail-conf.xml:system/etc/voicemail-conf.xml
-
+    $(LOCAL_PATH)/configs/voicemail-conf.xml:system/etc/voicemail-conf.xml \
+    $(LOCAL_PATH)/configs/appops_policy.xml:system/etc/appops_policy.xml \
+    $(LOCAL_PATH)/configs/buffers-conf.xml:system/etc/buffers-conf.xml
 # Ramdisk
 # BIN
 PRODUCT_PACKAGES += \
@@ -319,38 +369,68 @@ PRODUCT_PACKAGES += \
     init.qcom.syspart_fixup.sh \
     init.target.rc \
     ueventd.qcom.rc
-
+# Init RC files (for which permissions are different when compared to stock)
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/init/atrace.rc:system/etc/init/atrace.rc \
     $(LOCAL_PATH)/configs/init/audioserver.rc:system/etc/init/audioserver.rc \
     $(LOCAL_PATH)/configs/init/bootanim.rc:system/etc/init/bootanim.rc \
-    $(LOCAL_PATH)/configs/init/bootstat.rc:system/etc/init/bootstat.rc \
-    $(LOCAL_PATH)/configs/init/cameraserver.rc:system/etc/init/cameraserver.rc \
-    $(LOCAL_PATH)/configs/init/debuggerd.rc:system/etc/init/debuggerd.rc \
     $(LOCAL_PATH)/configs/init/drmserver.rc:system/etc/init/drmserver.rc \
-    $(LOCAL_PATH)/configs/init/dumpstate.rc:system/etc/init/dumpstate.rc \
-    $(LOCAL_PATH)/configs/init/gatekeeperd.rc:system/etc/init/gatekeeperd.rc \
-    $(LOCAL_PATH)/configs/init/installd.rc:system/etc/init/installd.rc \
     $(LOCAL_PATH)/configs/init/keystore.rc:system/etc/init/keystore.rc \
-    $(LOCAL_PATH)/configs/init/lmkd.rc:system/etc/init/lmkd.rc \
-    $(LOCAL_PATH)/configs/init/logd.rc:system/etc/init/logd.rc \
-    $(LOCAL_PATH)/configs/init/mdnsd.rc:system/etc/init/mdnsd.rc \
-    $(LOCAL_PATH)/configs/init/mediacodec.rc:system/etc/init/mediacodec.rc \
     $(LOCAL_PATH)/configs/init/mediadrmserver.rc:system/etc/init/mediadrmserver.rc \
-    $(LOCAL_PATH)/configs/init/mediaextractor.rc:system/etc/init/mediaextractor.rc \
     $(LOCAL_PATH)/configs/init/mediaserver.rc:system/etc/init/mediaserver.rc \
-    $(LOCAL_PATH)/configs/init/mtpd.rc:system/etc/init/mtpd.rc \
-    $(LOCAL_PATH)/configs/init/netd.rc:system/etc/init/netd.rc \
-    $(LOCAL_PATH)/configs/init/racoon.rc:system/etc/init/racoon.rc \
     $(LOCAL_PATH)/configs/init/rild.rc:system/etc/init/rild.rc \
-    $(LOCAL_PATH)/configs/init/servicemanager.rc:system/etc/init/servicemanager.rc \
-    $(LOCAL_PATH)/configs/init/surfaceflinger.rc:system/etc/init/surfaceflinger.rc \
-    $(LOCAL_PATH)/configs/init/uncrypt.rc:system/etc/init/uncrypt.rc \
-    $(LOCAL_PATH)/configs/init/vdc.rc:system/etc/init/vdc.rc \
-    $(LOCAL_PATH)/configs/init/vold.rc:system/etc/init/vold.rc
-    
+    $(LOCAL_PATH)/configs/init/surfaceflinger.rc:system/etc/init/surfaceflinger.rc
+
+# Charger images
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_fail.png:root/res/images/charger/battery_fail.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_0.png:root/res/images/charger/battery_level_720p_0.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_1.png:root/res/images/charger/battery_level_720p_1.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_2.png:root/res/images/charger/battery_level_720p_2.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_3.png:root/res/images/charger/battery_level_720p_3.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_4.png:root/res/images/charger/battery_level_720p_4.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_5.png:root/res/images/charger/battery_level_720p_5.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_6.png:root/res/images/charger/battery_level_720p_6.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_7.png:root/res/images/charger/battery_level_720p_7.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_8.png:root/res/images/charger/battery_level_720p_8.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_9.png:root/res/images/charger/battery_level_720p_9.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_720p_10.png:root/res/images/charger/battery_level_720p_10.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_0.png:root/res/images/charger/battery_level_1080p_0.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_1.png:root/res/images/charger/battery_level_1080p_1.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_2.png:root/res/images/charger/battery_level_1080p_2.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_3.png:root/res/images/charger/battery_level_1080p_3.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_4.png:root/res/images/charger/battery_level_1080p_4.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_5.png:root/res/images/charger/battery_level_1080p_5.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_6.png:root/res/images/charger/battery_level_1080p_6.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_7.png:root/res/images/charger/battery_level_1080p_7.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_8.png:root/res/images/charger/battery_level_1080p_8.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_9.png:root/res/images/charger/battery_level_1080p_9.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_level_1080p_10.png:root/res/images/charger/battery_level_1080p_10.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_0.png:root/res/images/charger/battery_num_720p_0.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_1.png:root/res/images/charger/battery_num_720p_1.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_2.png:root/res/images/charger/battery_num_720p_2.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_3.png:root/res/images/charger/battery_num_720p_3.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_4.png:root/res/images/charger/battery_num_720p_4.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_5.png:root/res/images/charger/battery_num_720p_5.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_6.png:root/res/images/charger/battery_num_720p_6.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_7.png:root/res/images/charger/battery_num_720p_7.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_8.png:root/res/images/charger/battery_num_720p_8.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_9.png:root/res/images/charger/battery_num_720p_9.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_720p_percent.png:root/res/images/charger/battery_num_720p_percent.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_0.png:root/res/images/charger/battery_num_1080p_0.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_1.png:root/res/images/charger/battery_num_1080p_1.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_2.png:root/res/images/charger/battery_num_1080p_2.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_3.png:root/res/images/charger/battery_num_1080p_3.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_4.png:root/res/images/charger/battery_num_1080p_4.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_5.png:root/res/images/charger/battery_num_1080p_5.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_6.png:root/res/images/charger/battery_num_1080p_6.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_7.png:root/res/images/charger/battery_num_1080p_7.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_8.png:root/res/images/charger/battery_num_1080p_8.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_9.png:root/res/images/charger/battery_num_1080p_9.png \
+    $(LOCAL_PATH)/rootdir/res/images/charger/battery_num_1080p_percent.png:root/res/images/charger/battery_num_1080p_percent.png
+
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
 
 PRODUCT_GMS_CLIENTID_BASE := android-motorola
 
-PRODUCT_VENDOR_KERNEL_HEADERS := hardware/qcom/msm8996/kernel-headers
+#PRODUCT_VENDOR_KERNEL_HEADERS := hardware/qcom/msm8996/kernel-headers

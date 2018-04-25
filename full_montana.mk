@@ -14,15 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-# Inherit from those products. Most specific first.
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
-
-# Inherit from montana device
+#
+# Inherit device tree
 $(call inherit-product, device/motorola/montana/device.mk)
+
+# Inherit vendor blobs
+$(call inherit-product, vendor/motorola/montana/montana-vendor.mk)
 
 # Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := montana
 PRODUCT_NAME := full_montana
 PRODUCT_MODEL := Moto G5s
-PRODUCT_MANUFACTURER := motorola
+PRODUCT_MANUFACTURER := Motorola
+PRODUCT_BRAND := Motorola
+PRODUCT_RELEASE_NAME := montana
+
+#PRODUCT_BUILD_PROP_OVERRIDES += \
+    BUILD_FINGERPRINT=motorola/montana/montana:7.1.1/NPS26.116-26/30:user/release-keys \
+    PRIVATE_BUILD_DESC="montana-7.1.1/NPS26.116-26/30:user/release-keys"

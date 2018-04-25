@@ -1,45 +1,103 @@
-######################################################
-# COPIED FROM MONTANA STOCK
-######################################################
-import /oem/oem.prop persist.lte.pco_supported
-import /oem/oem.prop persist.radio.mode_pref_nv10
-import /oem/oem.prop persist.radio.sib16_support
-import /oem/oem.prop persist.radio.nw_mtu_enabled
-import /oem/oem.prop persist.radio.customer_mbns
-import /oem/oem.prop ro.oem.*
-import /oem/oem.prop oem.*
-import /oem/oem.prop cdma.operator.numeric
-import /oem/oem.prop ro.cdma.home.operator.numeric
-import /oem/oem.prop ro.cdma.home.operator.alpha
-########### COPY OVER ###############################
-
-#
-# system.prop for cedric
+# system.prop for montana
 #
 
-# Android Run Time
-ro.sys.fw.dex2oat_thread_count=4
+# RILD
+rild.libpath=/system/vendor/lib/libril-qc-qmi-1.so
+rild.libargs=-d /dev/smd0
+persist.rild.nitz_plmn=
+persist.rild.nitz_long_ons_0=
+persist.rild.nitz_long_ons_1=
+persist.rild.nitz_long_ons_2=
+persist.rild.nitz_long_ons_3=
+persist.rild.nitz_short_ons_0=
+persist.rild.nitz_short_ons_1=
+persist.rild.nitz_short_ons_2=
+persist.rild.nitz_short_ons_3=
+ril.subscription.types=NV,RUIM
 
-# Audio
-audio.deep_buffer.media=true
-audio.offload.buffer.size.kb=64
-audio.offload.gapless.enabled=false
-audio.offload.multiple.enabled=false
+# RADIO
+ro.radio.imei.sv=1
+ro.mot.ignore_csim_appid=true
+persist.radio.apm_sim_not_pwdn=1
+persist.radio.sib16_support=1
+persist.radio.no_wait_for_card=1
+persist.radio.dfr_mode_set=1
+persist.radio.relay_oprt_change=1
+persist.radio.msgtunnel.start=true
+persist.radio.oem_ind_to_both=0
+persist.radio.0x9e_not_callname=1
+persist.radio.mt_sms_ack=30
+persist.radio.force_get_pref=1
+persist.radio.is_wps_enabled=true
+persist.radio.custom_ecc=1
+persist.radio.sw_mbn_update=1
+persist.radio.app_mbn_path=/fsg
+persist.radio.sar_sensor=1
+persist.radio.apn_delay=5000
+persist.radio.call.audio.output=0
+persist.radio.calls.on.ims=true
+persist.radio.jbims=1
+persist.radio.domain.ps=0
+persist.radio.VT_ENABLE=1
+persist.radio.VT_HYBRID_ENABLE=1
+persist.radio.ROTATION_ENABLE=1
+persist.radio.REVERSE_QMI=0
+persist.radio.RATE_ADAPT_ENABLE=1
+persist.radio.VT_USE_MDM_TIME=0
+persist.radio.videopause.mode=0
+
+# CNE
+persist.cne.feature=1
+persist.cne.rat.wlan.chip.oem=WCN
+persist.cne.logging.qxdm=3974
+
+# IMS
+persist.ims.disableADBLogs=2
+persist.ims.volte=true
+persist.ims.vt=false
+persist.ims.vt.epdg=false
+persist.ims.rcs=false
+persist.ims.disableDebugLogs=0
+persist.ims.disableQXDMLogs=0
+persist.ims.disableIMSLogs=0
+
+# Data modules
+ro.use_data_netmgrd=true
+persist.data.netmgrd.qos.enable=true
+persist.data.mode=concurrent
+persist.data.qmi.adb_logmask=0
+persist.data.iwlan.enable=true
+
+# Network & Telephony
+ro.telephony.default_network=10,0
+persist.rmnet.mux=enabled
+telephony.lteOnCdmaDevice=1
+
+# Media (Audio/Video)
+audio.offload.disable=false
+audio.offload.video=false
 audio.offload.pcm.16bit.enable=false
 audio.offload.pcm.24bit.enable=false
-audio.offload.track.enable=true
-persist.audio.dualmic.config=endfire
-af.fast_track_multiplier=1
-audio.offload.disable=false
 audio.offload.min.duration.secs=60
-audio.offload.video=false
-audio.playback.mch.downsample=true
+audio.offload.gapless.enabled=false
+audio.offload.multiple.enabled=false
+audio.offload.buffer.size.kb=64
+audio.offload.track.enable=true
 audio_hal.period_size=240
+audio.parser.ip.buffer.size=262144
+audio.deep_buffer.media=true
+audio.playback.mch.downsample=true
+audio.safx.pbe.enabled=true
+audio.pp.asphere.enabled=false
+audio.dolby.ds2.enabled=true
 av.offload.enable=false
-av.debug.disable.pers.cache=1
-persist.audio.endcall.delay=250
 qcom.hw.aac.encoder=false
-
+media.msm8956hw=0
+mm.enable.sec.smoothstreaming=false
+mm.enable.smoothstreaming=false
+mm.enable.qcom_parser=4643
+mmp.enable.3g2=true
+media.aac_51_output_enabled=true
 persist.audio.calfile0=/etc/acdbdata/Bluetooth_cal.acdb
 persist.audio.calfile1=/etc/acdbdata/General_cal.acdb
 persist.audio.calfile2=/etc/acdbdata/Global_cal.acdb
@@ -47,20 +105,42 @@ persist.audio.calfile3=/etc/acdbdata/Handset_cal.acdb
 persist.audio.calfile4=/etc/acdbdata/Hdmi_cal.acdb
 persist.audio.calfile5=/etc/acdbdata/Headset_cal.acdb
 persist.audio.calfile6=/etc/acdbdata/Speaker_cal.acdb
-
-persist.audio.fluence.speaker=false
+persist.audio.dualmic.config=endfire
 persist.audio.fluence.voicecall=true
 persist.audio.fluence.voicecomm=true
 persist.audio.fluence.voicerec=false
-ro.qc.sdk.audio.fluencetype=none
+persist.audio.fluence.speaker=false
+persist.audio.endcall.delay=250
+persist.speaker.prot.enable=false
+persist.sys.media.use-awesome=false
+persist.mm.sta.enable=0
+ro.qc.sdk.audio.fluencetype=fluence
 ro.qc.sdk.audio.ssr=false
-
+ro.config.vc_call_vol_steps=8
+tunnel.audio.encode = false
+video.disable.ubwc=1
+vidc.disable.split.mode=1
+voice.playback.conc.disabled=true
+voice.record.conc.disabled=false
+voice.voip.conc.disabled=true
+voice.conc.fallbackpath=deep-buffer
 use.voice.path.for.pcm.voip=false
+use.qti.sw.alac.decoder=true
+use.qti.sw.ape.decoder=true
+
+# Qualcomm
+com.qc.hardware=true
+debug.qc.hardware=true
+ro.qualcomm.cabl=0
+
+# Time services
+persist.timed.enable=true
 
 # Bluetooth
 bluetooth.hfp.client=1
 qcom.bluetooth.soc=smd
 qcom.bt.le_dev_pwr_class=1
+net.bt.name=Android
 ro.cutoff_voltage_mv=3400
 ro.bluetooth.hfp.ver=1.7
 ro.qualcomm.bt.hci_transport=smd
@@ -74,62 +154,33 @@ ro.bluetooth.sap=true
 ro.bluetooth.dun=true
 ro.qualcomm.bluetooth.map=true
 
-# Camera
-persist.camera.is_type=1
-persist.camera.gyro.android=1
+# Sensors
+ro.hardware.sensors=montana
+ro.mot.sensors.glance_approach=false
 
-camera.disable_zsl_mode=1
-camera.display.umax=1920x1080
-camera.display.lmax=1280x720
-camera.mot.startup_probing=0
-persist.camera.debug.logfile=0
-persist.camera.gyro.disable=0
-
-vidc.dec.downscalar_width=1920
-vidc.dec.downscalar_height=1088
-vidc.dec.disable.split.cpu=1
-vidc.enc.dcvs.extra-buff-count=2
-vidc.enc.disable_bframes=1
-vidc.disable.split.mode=1
-vidc.enc.disable.pq=true
-
-# CNE
-persist.cne.feature=1
-persist.cne.logging.qxdm=3974
-persist.cne.rat.wlan.chip.oem=WCN
-persist.dpm.feature=0
-persist.sys.cnd.iwlan=1
-
-# core_ctrl
-ro.core_ctl_max_cpu=4
-ro.core_ctl_min_cpu=2
-
-# Dalvik
-dalvik.vm.heapstartsize=8m
-dalvik.vm.heapgrowthlimit=192m
-dalvik.vm.heapsize=384m
-dalvik.vm.heaptargetutilization=0.75
-dalvik.vm.heapminfree=512k
-dalvik.vm.heapmaxfree=8m
-
-# Display
-debug.egl.hw=1
-debug.enable.sglscale=1
-debug.gralloc.enable_fb_ubwc=1
-debug.gralloc.gfx_ubwc_disable=0
-debug.mdpcomp.logs=0
+# Misc
 debug.sf.hw=1
+debug.egl.hw=1
+debug.mdpcomp.logs=0
+debug.enable.sglscale=1
+debug.enable.gamed=0
 dev.pm.dyn_samplingrate=1
+persist.debug.coresight.config=stm-events
 persist.demo.hdmirotationlock=false
 persist.hwc.mdpcomp.enable=true
-ro.opengles.version=196609
 persist.hwc.enable_vds=1
-ro.sf.lcd_density=440
-
-# FM
+persist.fuse_sdcard=true
+persist.qfp=false
+ro.vendor.at_library=libqti-at.so
+ro.vendor.gt_library=libqti-gt.so
+ro.core_ctl_min_cpu=2
+ro.core_ctl_max_cpu=4
+ro.config.max_starting_bg=8
+ro.sf.lcd_density=390
 ro.fm.transmitter=false
+vidc.enc.narrow.searchrange=1
 
-# HWUI
+#HWUI properties
 ro.hwui.texture_cache_size=72
 ro.hwui.layer_cache_size=48
 ro.hwui.r_buffer_cache_size=8
@@ -142,144 +193,88 @@ ro.hwui.text_small_cache_height=1024
 ro.hwui.text_large_cache_width=2048
 ro.hwui.text_large_cache_height=2048
 
-# IMS
-persist.radio.jbims=1
-persist.radio.RATE_ADAPT_ENABLE=1
-persist.radio.VT_ENABLE=1
-persist.radio.VT_HYBRID_ENABLE=1
-persist.radio.VT_USE_MDM_TIME=0
-persist.ims.disableADBLogs=2
-persist.ims.disableDebugLogs=0
-persist.ims.disableIMSLogs=0
-persist.ims.disableQXDMLogs=0
-persist.ims.rcs=false
-persist.ims.volte=false
-persist.ims.vt=false
-persist.ims.vt.epdg=false
-persist.mm.sta.enable=0
-persist.vt.supported=0
-ro.config.hw_volte_on=true
+#Enable B service adj transition by default
+ro.sys.fw.bservice_enable=true
+ro.sys.fw.bservice_limit=5
+ro.sys.fw.bservice_age=5000
 
-# Media
-media.aac_51_output_enabled=true
-mm.enable.qcom_parser=135715
-mm.enable.sec.smoothstreaming=false
-mm.enable.smoothstreaming=false
-mmp.enable.3g2=true
+#Trim properties
+ro.sys.fw.use_trim_settings=true
+ro.sys.fw.empty_app_percent=50
+ro.sys.fw.trim_empty_percent=100
+ro.sys.fw.trim_cache_percent=100
+ro.sys.fw.trim_enable_memory=2147483648
 
-# NITZ
-persist.rild.nitz_plmn=
-persist.rild.nitz_long_ons_0=
-persist.rild.nitz_long_ons_1=
-persist.rild.nitz_long_ons_2=
-persist.rild.nitz_long_ons_3=
-persist.rild.nitz_short_ons_0=
-persist.rild.nitz_short_ons_1=
-persist.rild.nitz_short_ons_2=
-persist.rild.nitz_short_ons_3=
+# Enable Delay Service Restart
+ro.am.reschedule_service=true
 
-# Qualcomm
-com.qc.hardware=true
-debug.qc.hardware=true
-persist.timed.enable=true
+#Optimal dex2oat threads for faster app installation
+ro.sys.fw.dex2oat_thread_count=4
 
-# Radio
-persist.data.qmi.adb_logmask=0
-persist.radio.apn_delay=5000
-persist.radio.apm_sim_not_pwdn=1
-persist.radio.dfr_mode_set=1
-persist.radio.force_get_pref=1
-persist.radio.msgtunnel.start=true
-persist.radio.no_wait_for_card=1
-persist.radio.oem_ind_to_both=0
-persist.radio.relay_oprt_change=1
-rild.libargs=-d /dev/smd0
-rild.libpath=/system/vendor/lib/libril-qc-qmi-1.so
-ro.mot.ignore_csim_appid=true
-persist.sys.ssr.restart_level=ALL_ENABLE
-persist.sys.qc.sub.rdump.on=1
-persist.radio.sw_mbn_update=1
-persist.sys.qc.sub.rdump.max=3
-persist.radio.custom_ecc=1
-persist.radio.is_wps_enabled=true
-persist.radio.mt_sms_ack=30
-persist.radio.0x9e_not_callname=1
-persist.qcril_uim_vcc_feature=1
-persist.radio.snapshot_timer=22
-persist.radio.snapshot_enabled=1
-persist.radio.call.audio.output=0
-persist.eab.supported=0
-persist.mot.gps.conf.from.sim=true
-persist.net.doxlat=true
-persist.radio.REVERSE_QMI=0
-persist.radio.ROTATION_ENABLE=1
-persist.radio.adb_log_on=0
-persist.radio.calls.on.ims=true
-persist.radio.domain.ps=0
-persist.radio.eons.enabled=false
-persist.radio.ril_payload_on=0
-persist.radio.sar_sensor=1
-persist.radio.sglte_target=0
-persist.radio.sib16_support=1
-persist.rcs.presence.provision=0
-persist.rcs.supported=0
-persist.rmnet.mux=enabled
-ro.telephony.call_ring.multiple=false
+# Create zram disk
+ro.config.zram=true
 
-ro.use_data_netmgrd=true
-persist.data.qmi.adb_logmask=0
-persist.data.netmgrd.qos.enable=true
-persist.data.mode=concurrent
-persist.data.iwlan.enable=true
+# Create Swap disk, if below sys-prop enabled & also if device has lower (< 1 GB) RAM
+ro.config.swap=true
 
-# USB
-ro.usb.mtp=0x2e82
-ro.usb.mtp_adb=0x2e76
-ro.usb.ptp=0x2e83
-ro.usb.ptp_adb=0x2e84
-ro.usb.bpt=0x2ee5
-ro.usb.bpt_adb=0x2ee6
-ro.usb.bpteth=0x2ee7
-ro.usb.bpteth_adb=0x2ee8
+#set device emmc size
+#ro.emmc_size=16GB
 
-# Vendor Extension
-ro.vendor.extension_library=libqti-perfd-client.so
-ro.vendor.at_library=libqti-at.so
-#ro.vendor.gt_library=libqti-gt.so
+#force HAL1 for below packages
+camera.hal1.packagelist=com.skype.raider,com.google.android.talk
+persist.camera.HAL3.enabled=1
 
-#ADB Debug from Recovery
-persist.service.adb.enable=1                                                    
-persist.service.debuggable=1
-persist.sys.usb.config=mtp,adb
+#properties for limiting preview size in camera
+camera.display.umax=1920x1080
+camera.display.lmax=1280x720
 
-################################################################
-# COPIED FROM MONTANA STOCK
-################################################################
 #
-# System props for telephony
-# System prop to turn on CdmaLTEPhone always
-telephony.lteOnCdmaDevice=1
-ro.radio.imei.sv=1
-persist.mot.gps.smart_battery=1
-ro.frp.pst=/dev/block/bootdevice/by-name/frp
-persist.radio.app_mbn_path=/fsg
-persist.vold.ecryptfs_supported=true
-ro.hardware.sensors=montana
-ro.mot.sensors.glance_approach=false
-persist.sys.media.use-awesome=false
-#mm.enable.qcom_parser=4643
-keyguard.no_require_sim=true
-drm.service.enabled=true
-mdc_initial_max_retry=10
-persist.radio.videopause.mode=0
-persist.sys.dalvik.vm.lib.2=libart.so
+# ADDITIONAL_BUILD_PROPERTIES
+af.fast_track_multiplier=1
+camera.disable_zsl_mode=1
+dalvik.vm.heapstartsize=8m
+dalvik.vm.heapgrowthlimit=192m
+dalvik.vm.heapsize=384m
+dalvik.vm.heaptargetutilization=0.75
+dalvik.vm.heapminfree=512k
+dalvik.vm.heapmaxfree=8m
 dalvik.vm.isa.arm.variant=cortex-a53
 dalvik.vm.isa.arm.features=default
-ro.data.large_tcp_window_size=true
-ril.subscription.types=RUIM
-persist.radio.mcfg_enabled=1
-persist.radio.mcfg_noreset=1
-persist.radio.mcfg_remote=1
-persist.radio.mot_ecc_enabled=1
-persist.radio.mot_ecc_custid=common
+dalvik.vm.stack-trace-file=/data/anr/traces.txt
+drm.service.enabled=true
+keyguard.no_require_sim=true
+mdc_initial_max_retry=10
+ro.build.version.qcom=LA.UM.5.6.r1-03800-89xx.0
+ro.product.first_api_level=25
+ro.frp.pst=/dev/block/bootdevice/by-name/frp
+ro.usb.bpt=2ec1
+ro.usb.bpt_adb=2ec5
+ro.usb.bpteth=2ec3
+ro.usb.bpteth_adb=2ec6
+ro.usb.mtp=2e82
+ro.usb.mtp_adb=2e76
+ro.usb.ptp=2e83
+ro.usb.ptp_adb=2e84
+ro.vendor.extension_library=libqti-perfd-client.so
+ro.lenovo.single_hand=1
+persist.sys.cnd.iwlan=1
+persist.vt.supported=0
+persist.eab.supported=0
+persist.rcs.supported=0
+persist.rcs.presence.provision=0
+persist.mot.gps.conf.from.sim=true
+persist.mot.gps.smart_battery=1
+persist.sys.ssr.restart_level=ALL_ENABLE
+persist.sys.qc.sub.rdump.on=1
+persist.sys.qc.sub.rdump.max=0
+persist.qcril_uim_vcc_feature=1
+persist.dpm.feature=0
+persist.vold.ecryptfs_supported=true
+persist.sys.dalvik.vm.lib.2=libart.so
+#qemu.hw.mainkeys=1
 
+#ADB Debug from Recovery
+#persist.service.adb.enable=1                                                  
+#persist.service.debuggable=1
+#persist.sys.usb.config=adb
+persist.sys.usb.config mtp,adb
